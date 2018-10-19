@@ -1,8 +1,8 @@
 class API {
 
   static init () {
-    let imageId = 1168 
-    this.imageURL = `https://randopic.herokuapp.com/images/${imageId}`
+    this.imageId = 134
+    this.imageURL = `https://randopic.herokuapp.com/images/${this.imageId}`
     this.likeURL = 'https://randopic.herokuapp.com/likes/'
     this.commentsURL = 'https://randopic.herokuapp.com/comments/'
   }
@@ -12,15 +12,27 @@ class API {
       .then(resp => resp.json())
   }
 
-  static likeImage (like_count) {             
+  static likeImage (like_count) {
     return fetch(`${this.likeURL}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        image_id: 1168,
+        image_id: this.imageId,
         like_count: like_count
       })
     })
+  }
+
+  static sendComment(text) {
+    return fetch(this.commentsURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        image_id: this.imageId,
+        content: text
+      })
+    })
+
   }
 
 }
