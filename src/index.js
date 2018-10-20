@@ -1,12 +1,50 @@
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('%c DOM Content Loaded and Parsed!', 'color: magenta')
+let imageNotFromServ
+const likeButt = document.getElementById('like_button')
+const likeDisplay = document.getElementById('likes')
+const commentsList = document.getElementById('comments')
+const imageCard = document.getElementById('image_card')
+const image = document.getElementById('image')
 
-  let imageId = 1 //Enter the id from the fetched image here
+function like() {
+  likes = parseInt(likeDisplay.innerText)
+  likes++
+  API.likeImage(likes)
+  likeDisplay.innerText = `${likes}`
+}
 
-  const imageURL = `https://randopic.herokuapp.com/images/${imageId}`
+function renderImage(imageData){
+  console.log(imageData.comments)
+  image.src = imageData.url
+}
 
-  const likeURL = `https://randopic.herokuapp.com/likes/`
+function addComments(comm) {
+  const listItem = document.createElement('li')
+  listItem.innerText = comm
+  commentsList.append(listItem)
+}
 
-  const commentsURL = `https://randopic.herokuapp.com/comments/`
 
+function appendImage (image) {
+  const imageItem = renderImage(image)
+}
+
+const commentForm = document.getElementById('comment_form')
+commentForm.addEventListener('submit', event => {
+  event.preventDefault()
+  const commentInput = document.getElementById('comment_input')
+  addComments(commentInput.value)
+  API.sendComment(commentInput.value)
 })
+
+
+API.getImage()
+.then(imageFromServer => {
+  imageNotFromServer = imageFromServer
+  appendImage(imageFromServer)
+  likeDisplay.innerText = imageFromServer.like_count
+  imageFromServer.comments.forEach(comm => {
+    addComments(comm.content)
+  })
+})
+
+
